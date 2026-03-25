@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "Colasanti's Tropical Gardens",
+    "category": "farm",
+    "subcategory": "fruit-veg",
+    "address": "1550 Road 3 E, Kingsville, ON",
+    "lat": 42.0648,
+    "lng": -82.7284,
+    "description": "Large family farm with greenhouses, market, and seasonal produce.",
+    "seasonal": false
+  },
+  {
+    "id": 2,
+    "name": "Smith's Apple Orchard",
+    "category": "farm",
+    "subcategory": "fruit-veg",
+    "address": "Leamington, ON",
+    "lat": 42.0534,
+    "lng": -82.5996,
+    "description": "Pick-your-own apples and pears in season.",
+    "seasonal": true
+  },
+  {
+    "id": 3,
+    "name": "Lakeshore Roadside Stand",
+    "category": "roadside-stand",
+    "subcategory": "fruit-veg",
+    "address": "County Rd 50, Lakeshore, ON",
+    "lat": 42.2241,
+    "lng": -82.6624,
+    "description": "Fresh corn, tomatoes, and local produce in summer.",
+    "seasonal": true
+  },
+  {
+    "id": 4,
+    "name": "Blenheim Farms Meat Shop",
+    "category": "farm",
+    "subcategory": "meat",
+    "address": "Blenheim, ON",
+    "lat": 42.3167,
+    "lng": -81.9833,
+    "description": "Local beef, pork, and lamb direct from the farm.",
+    "seasonal": false
+  },
+  {
+    "id": 5,
+    "name": "Windsor Farmers Market",
+    "category": "market",
+    "subcategory": "mixed",
+    "address": "Riverside Dr E, Windsor, ON",
+    "lat": 42.3149,
+    "lng": -83.0364,
+    "description": "Weekly market featuring local farmers and producers.",
+    "seasonal": false
+  },
+  {
+    "id": 6,
+    "name": "Leamington Poultry Farm",
+    "category": "farm",
+    "subcategory": "poultry",
+    "address": "Leamington, ON",
+    "lat": 42.0456,
+    "lng": -82.6012,
+    "description": "Free-range chickens and eggs.",
+    "seasonal": false
+  },
+  {
+    "id": 7,
+    "name": "Harrow Farm Stand",
+    "category": "roadside-stand",
+    "subcategory": "fruit-veg",
+    "address": "County Rd 20, Harrow, ON",
+    "lat": 42.0343,
+    "lng": -82.9217,
+    "description": "Seasonal tomatoes, peppers, and peaches.",
+    "seasonal": true
+  }
+]
