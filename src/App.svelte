@@ -10,7 +10,10 @@
 </script>
 
 <div class="app">
-  <!-- Map always fills the full viewport -->
+  <!-- Sidebar overlays the map on desktop, sits on top on mobile -->
+  <FilterPanel bind:activeCategories {sidebarOpen} />
+
+  <!-- Map always fills the full viewport on desktop -->
   <div class="map-wrapper">
     <MapView
       {providers}
@@ -19,9 +22,6 @@
       ondeselect={() => selectedProvider = null}
     />
   </div>
-
-  <!-- Sidebar overlays the map -->
-  <FilterPanel bind:activeCategories {sidebarOpen} />
 
   <!-- Collapse tab overlays the map at the sidebar edge -->
   <button
