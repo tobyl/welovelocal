@@ -4,9 +4,33 @@
   import DetailPanel from './components/DetailPanel.svelte';
   import providers from './data/providers.json';
 
-  let activeCategories = new Set(['farm', 'roadside-stand', 'market']);
+  let activeCategories = new Set(['drinks', 'produce', 'honey', 'meat-fish', 'orchard', 'market']);
   let selectedProvider = null;
+  let selectedGroup = null;
   let sidebarOpen = true;
+
+  function handleSelectProvider(p) {
+    selectedProvider = p;
+    selectedGroup = null;
+  }
+
+  function handleSelectGroup(grp) {
+    selectedGroup = grp;
+    selectedProvider = null;
+  }
+
+  function handleSelectProviderFromGroup(p) {
+    selectedProvider = p;
+  }
+
+  function handleBackToGroup() {
+    selectedProvider = null;
+  }
+
+  function handleClosePanel() {
+    selectedProvider = null;
+    selectedGroup = null;
+  }
 </script>
 
 <div class="app">
@@ -18,8 +42,11 @@
     <MapView
       {providers}
       {activeCategories}
-      onselect={p => selectedProvider = p}
-      ondeselect={() => selectedProvider = null}
+      {sidebarOpen}
+      {selectedProvider}
+      onselect={handleSelectProvider}
+      onselectgroup={handleSelectGroup}
+      ondeselect={handleClosePanel}
     />
   </div>
 
@@ -31,7 +58,13 @@
     aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
   >{sidebarOpen ? '◀' : '▶'}</button>
 
-  <DetailPanel provider={selectedProvider} onclose={() => selectedProvider = null} />
+  <DetailPanel
+    provider={selectedProvider}
+    group={selectedGroup}
+    onclose={handleClosePanel}
+    onselectprovider={handleSelectProviderFromGroup}
+    onbacktogroup={handleBackToGroup}
+  />
 </div>
 
 <style>

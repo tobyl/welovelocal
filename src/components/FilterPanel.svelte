@@ -1,33 +1,48 @@
 <script>
   export let activeCategories;
   export let sidebarOpen = true;
-  export let ontoggle = () => {};
 
   const FILTERS = [
     {
-      category: 'farm',
-      label: 'Farms',
-      icon: '🌾',
+      category: 'produce',
+      label: 'Produce & Stands',
+      icon: 'produce',
       color: '#2d7a2d',
-      subcategories: ['fruit-veg', 'meat', 'poultry'],
     },
     {
-      category: 'roadside-stand',
-      label: 'Roadside Stands',
-      icon: '🥕',
-      color: '#e07b00',
-      subcategories: ['fruit-veg'],
+      category: 'drinks',
+      label: 'Wineries & Craft Drinks',
+      icon: 'wine',
+      color: '#7b2d56',
+    },
+    {
+      category: 'orchard',
+      label: 'Orchards & Berries',
+      icon: 'apple',
+      color: '#c0392b',
+    },
+    {
+      category: 'honey',
+      label: 'Honey & Apiaries',
+      icon: 'honey',
+      color: '#d9822b',
+    },
+    {
+      category: 'meat-fish',
+      label: 'Meats, Fish & Specialty',
+      icon: 'fish',
+      color: '#a0522d',
     },
     {
       category: 'market',
       label: "Farmers' Markets",
-      icon: '🏪',
-      color: '#7b3fa0',
-      subcategories: ['mixed'],
+      icon: 'farmers-market',
+      color: '#6a329f',
     },
   ];
 
   let mobileOpen = false;
+  let modalOpen = false;
 
   function toggle(category) {
     const next = new Set(activeCategories);
@@ -44,12 +59,12 @@
 
   <!-- Desktop masthead -->
   <div class="panel-header desktop-only">
-    <h1>Windsor-Essex<br><span class="heart">♥</span><br>Local</h1>
+    <img src="/masthead.svg" alt="Windsor-Essex ♥ Local" class="masthead-img" />
   </div>
 
   <!-- Mobile header bar -->
   <div class="mobile-bar mobile-only">
-    <h1>Windsor-Essex <span class="heart">♥</span> Local</h1>
+    <img src="/masthead.svg" alt="Windsor-Essex ♥ Local" class="masthead-img" />
     <button
       class="filters-toggle"
       class:open={mobileOpen}
@@ -65,7 +80,6 @@
 
   <!-- Filters: always visible on desktop, dropdown on mobile -->
   <nav class="filters" class:mobile-open={mobileOpen}>
-    <h2>Show on map</h2>
     {#each FILTERS as filter}
       <button
         class="filter-btn"
@@ -74,19 +88,40 @@
         on:click={() => toggle(filter.category)}
         aria-pressed={activeCategories.has(filter.category)}
       >
-        <span class="filter-icon">{filter.icon}</span>
+        <span class="filter-icon" style="--icon: url('/icons/{filter.icon}.svg')"></span>
         <span class="filter-label">{filter.label}</span>
-        <span class="filter-check">{activeCategories.has(filter.category) ? '✓' : ''}</span>
+        <span class="filter-check" class:on={activeCategories.has(filter.category)}></span>
       </button>
     {/each}
   </nav>
 
   <!-- Desktop footer only -->
   <footer class="panel-footer desktop-only">
+    <button class="info-btn" on:click={() => modalOpen = true}>What's included?</button>
     <p>Data updated manually.<br/>Know a spot? <a href="mailto:hello@welovelocal.ca">Get in touch</a>.</p>
   </footer>
 
 </aside>
+
+{#if modalOpen}
+  <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+  <div class="modal-backdrop" on:click={() => modalOpen = false}>
+    <div class="modal" on:click|stopPropagation>
+      <button class="modal-close" on:click={() => modalOpen = false} aria-label="Close">✕</button>
+      <h3>What's included?</h3>
+      <p>This map shows the locations of small stores, roadside stands, farms and other outlets that sell locally grown produce, meats and other fare.</p>
+      <p>What's included:</p>
+      <ul>
+        <li>Produce & roadside farm stands</li>
+        <li>Wineries, cideries & craft breweries</li>
+        <li>Orchards, berry patches & cider mills</li>
+        <li>Honey farms & local apiaries</li>
+        <li>Meats, Lake Erie fish & specialty foods</li>
+        <li>Community farmers' markets</li>
+      </ul>
+    </div>
+  </div>
+{/if}
 
 <style>
   /* ── Desktop sidebar ── */
@@ -98,7 +133,7 @@
     display: flex;
     flex-direction: column;
     width: 240px;
-    background: #fff;
+    background: linear-gradient(to bottom, #f5eedf 85%, #e8d9bc);
     box-shadow: 2px 0 12px rgba(0,0,0,0.1);
     z-index: 10;
     padding: 20px 16px;
@@ -112,43 +147,23 @@
   }
 
   .panel-header {
-    text-align: center;
+    padding: 4px 0;
   }
 
-  h1 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: #1a1a1a;
-    line-height: 1.6;
-  }
-
-  .heart {
-    display: inline-block;
-    font-size: 36px;
-    color: #c0392b;
-    line-height: 1;
-    animation: pulse 1.4s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+  .masthead-img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .filters {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-  }
-
-  h2 {
-    margin: 0 0 8px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #aaa;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   }
 
   .filter-btn {
@@ -157,43 +172,71 @@
     gap: 10px;
     width: 100%;
     padding: 10px 12px;
-    border: 2px solid #e8e8e8;
-    border-radius: 10px;
-    background: #fff;
+    border: none;
+    border-bottom: 1.5px solid #e8e8e8;
+    border-radius: 0;
+    background: transparent;
     cursor: pointer;
     font-size: 14px;
     font-family: inherit;
-    color: #555;
-    transition: all 0.15s ease;
+    color: #aaa;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .filter-btn:last-child {
+    border-bottom: none;
   }
 
   .filter-btn:hover {
-    border-color: var(--accent);
+    background: rgba(0,0,0,0.03);
     color: var(--accent);
   }
 
   .filter-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
+    color: var(--accent);
   }
 
   .filter-icon {
-    font-size: 18px;
-    line-height: 1;
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    background-color: #ccc;
+    -webkit-mask-image: var(--icon);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: var(--icon);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    transition: background-color 0.15s ease;
+  }
+
+  .filter-btn:hover .filter-icon,
+  .filter-btn.active .filter-icon {
+    background-color: var(--accent);
   }
 
   .filter-label {
     flex: 1;
     text-align: left;
     font-weight: 500;
+    line-height: 1.25;
   }
 
   .filter-check {
-    font-size: 13px;
-    font-weight: 700;
-    width: 16px;
-    text-align: center;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid #ddd;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .filter-check.on {
+    background: var(--accent);
+    border-color: var(--accent);
   }
 
   .panel-footer {
@@ -201,6 +244,94 @@
     font-size: 12px;
     color: #aaa;
     line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-btn {
+    align-self: flex-start;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    color: #888;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+
+  .info-btn:hover {
+    border-color: #888;
+    color: #444;
+  }
+
+  :global(.modal-backdrop) {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  :global(.modal) {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    padding: 28px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+  }
+
+  :global(.modal h3) {
+    margin: 0 0 14px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a1a;
+    padding-right: 24px;
+  }
+
+  :global(.modal p) {
+    margin: 0 0 10px;
+  }
+
+  :global(.modal ul) {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  :global(.modal ul li) {
+    margin-bottom: 4px;
+  }
+
+  :global(.modal-close) {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: #f0f0f0;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  :global(.modal-close:hover) {
+    background: #e0e0e0;
   }
 
   .panel-footer a {
@@ -220,6 +351,7 @@
       flex-direction: column;
       padding: 0;
       gap: 0;
+      background: #f5eedf;
       box-shadow: 0 2px 8px rgba(0,0,0,0.12);
       overflow: visible;
       transition: none;
@@ -236,15 +368,9 @@
       gap: 12px;
     }
 
-    .mobile-bar h1 {
-      font-size: 16px;
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-
-    .mobile-bar .heart {
-      font-size: 18px;
-      vertical-align: middle;
+    .mobile-bar .masthead-img {
+      height: 32px;
+      width: auto;
     }
 
     .filters-toggle {
