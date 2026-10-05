@@ -2,42 +2,38 @@
   export let activeCategories;
   export let sidebarOpen = true;
 
+  const BRAND_COLOR = '#dc2d05';
+
   const FILTERS = [
     {
       category: 'produce',
       label: 'Produce & Stands',
       icon: 'produce',
-      color: '#2d7a2d',
     },
     {
       category: 'drinks',
       label: 'Wineries & Craft Drinks',
       icon: 'wine',
-      color: '#7b2d56',
     },
     {
       category: 'orchard',
       label: 'Orchards & Berries',
       icon: 'apple',
-      color: '#c0392b',
     },
     {
       category: 'honey',
       label: 'Honey & Apiaries',
       icon: 'honey',
-      color: '#d9822b',
     },
     {
       category: 'meat-fish',
       label: 'Meats, Fish & Specialty',
       icon: 'fish',
-      color: '#a0522d',
     },
     {
       category: 'market',
       label: "Farmers' Markets",
       icon: 'farmers-market',
-      color: '#6a329f',
     },
   ];
 
@@ -84,7 +80,7 @@
       <button
         class="filter-btn"
         class:active={activeCategories.has(filter.category)}
-        style="--accent: {filter.color}"
+        style="--accent: {BRAND_COLOR}"
         on:click={() => toggle(filter.category)}
         aria-pressed={activeCategories.has(filter.category)}
       >
@@ -93,12 +89,20 @@
         <span class="filter-check" class:on={activeCategories.has(filter.category)}></span>
       </button>
     {/each}
+
+    <!-- Mobile footer inside dropdown menu -->
+    <div class="mobile-footer mobile-only">
+      <button class="info-btn" on:click={() => modalOpen = true}>What's included?</button>
+      <p>Data updated manually.<br/>Know a spot? <a href="https://docs.google.com/forms/d/e/1FAIpQLSend8cmMSIm18xJtHg24yKvHiGC55W8fsNzys7tnEuWbRGnWA/viewform" target="_blank" rel="noopener noreferrer">Let us know!</a></p>
+      <p class="credit-note">by <a href="https://leftly.me" target="_blank" rel="noopener noreferrer">Toby Leftly</a></p>
+    </div>
   </nav>
 
   <!-- Desktop footer only -->
   <footer class="panel-footer desktop-only">
     <button class="info-btn" on:click={() => modalOpen = true}>What's included?</button>
-    <p>Data updated manually.<br/>Know a spot? <a href="mailto:hello@welovelocal.ca">Get in touch</a>.</p>
+    <p>Data updated manually.<br/>Know a spot? <a href="https://docs.google.com/forms/d/e/1FAIpQLSend8cmMSIm18xJtHg24yKvHiGC55W8fsNzys7tnEuWbRGnWA/viewform" target="_blank" rel="noopener noreferrer">Let us know!</a></p>
+    <p class="credit-note">by <a href="https://leftly.me" target="_blank" rel="noopener noreferrer">Toby Leftly</a></p>
   </footer>
 
 </aside>
@@ -119,6 +123,10 @@
         <li>Meats, Lake Erie fish & specialty foods</li>
         <li>Community farmers' markets</li>
       </ul>
+      <p class="modal-suggest">
+        Know a spot that should be on the map?
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSend8cmMSIm18xJtHg24yKvHiGC55W8fsNzys7tnEuWbRGnWA/viewform" target="_blank" rel="noopener noreferrer">Let us know!</a>
+      </p>
     </div>
   </div>
 {/if}
@@ -179,7 +187,7 @@
     cursor: pointer;
     font-size: 14px;
     font-family: inherit;
-    color: #aaa;
+    color: #888;
     transition: color 0.15s ease, background 0.15s ease;
   }
 
@@ -188,12 +196,16 @@
   }
 
   .filter-btn:hover {
-    background: rgba(0,0,0,0.03);
-    color: var(--accent);
+    background: rgba(220, 45, 5, 0.05);
+    color: #1a1a1a;
   }
 
   .filter-btn.active {
-    color: var(--accent);
+    color: #1a1a1a;
+  }
+
+  .filter-btn.active .filter-label {
+    font-weight: 600;
   }
 
   .filter-icon {
@@ -201,7 +213,7 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    background-color: #ccc;
+    background-color: #bbb;
     -webkit-mask-image: var(--icon);
     -webkit-mask-size: contain;
     -webkit-mask-repeat: no-repeat;
@@ -334,8 +346,60 @@
     background: #e0e0e0;
   }
 
-  .panel-footer a {
-    color: #2d7a2d;
+  .panel-footer a,
+  .mobile-footer a,
+  :global(.modal-suggest a) {
+    color: #dc2d05;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .panel-footer a:hover,
+  .mobile-footer a:hover,
+  :global(.modal-suggest a:hover) {
+    color: #b82404;
+  }
+
+  .mobile-footer {
+    display: none;
+    margin-top: 8px;
+    padding: 10px 4px 4px;
+    border-top: 1.5px solid #e8e8e8;
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  :global(.modal-suggest) {
+    margin-top: 16px !important;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .credit-note {
+    margin: 4px 0 0;
+    font-size: 11px;
+    color: #999;
+    letter-spacing: 0.02em;
+  }
+
+  .credit-note a {
+    color: #777 !important;
+    font-weight: 500 !important;
+    text-decoration: underline !important;
+    text-decoration-color: #ccc !important;
+    text-underline-offset: 2px;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+
+  .credit-note a:hover {
+    color: #1a1a1a !important;
+    text-decoration-color: #666 !important;
   }
 
   /* ── Visibility helpers ── */

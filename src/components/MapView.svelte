@@ -28,21 +28,27 @@
     });
   }
 
+  const BRAND_COLOR = '#dc2d05';
+
   const CATEGORIES = {
-    'produce':   { color: '#2d7a2d', icon: 'produce' },
-    'drinks':    { color: '#7b2d56', icon: 'wine' },
-    'orchard':   { color: '#c0392b', icon: 'apple' },
-    'honey':     { color: '#d9822b', icon: 'honey' },
-    'meat-fish': { color: '#a0522d', icon: 'fish' },
-    'market':    { color: '#6a329f', icon: 'farmers-market' },
+    'produce':   { icon: 'produce' },
+    'drinks':    { icon: 'wine' },
+    'orchard':   { icon: 'apple' },
+    'honey':     { icon: 'honey' },
+    'meat-fish': { icon: 'fish' },
+    'market':    { icon: 'farmers-market' },
   };
 
-  // Fetch an SVG icon, colorise it, and return an HTMLImageElement.
-  function loadSvgIcon(iconName, color) {
+  // Fetch an SVG icon, colorise it, refine stroke width, rasterize at high resolution, and return HTMLImageElement.
+  function loadSvgIcon(iconName, color, strokeWidth = 1.65) {
     return fetch(`/icons/${iconName}.svg`)
       .then(r => r.text())
       .then(svg => {
-        const colored = svg.replace(/stroke="currentColor"/g, `stroke="${color}"`);
+        let colored = svg
+          .replace(/stroke="currentColor"/g, `stroke="${color}"`)
+          .replace(/stroke-width="2"/g, `stroke-width="${strokeWidth}"`)
+          .replace(/width="24"/, 'width="84"')
+          .replace(/height="24"/, 'height="84"');
         return new Promise(resolve => {
           const img = new Image();
           img.onload = () => resolve(img);
@@ -51,22 +57,32 @@
       });
   }
 
-  // Draw a map-pin shape to canvas: large circle head + two straight lines to a sharp tip.
+  // Draw a map-pin shape to high-DPI canvas (2x Retina supersampling)
   function createPinImage(color, iconImg) {
+    const dpr = 2; // 2x Retina supersampling
     const w = 52, h = 66;
     const canvas = document.createElement('canvas');
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
     const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     const cx = w / 2;   // 26
     const r  = 21;      // outer circle radius
-    const tipY = h - 4;
-    const cy   = Math.round(tipY - r * Math.SQRT2); // ≈ 33
+    const tipY = h - 4; // 62
+    const cy   = Math.round(tipY - r * Math.SQRT2); // ≈ 32
 
     const aLeft  = Math.PI * 3 / 4; // 135°
     const aRight = Math.PI / 4;     // 45°
 
+    // Subtle drop shadow for the pin
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetY = 1.5;
+
+    // Outer pin body
     ctx.beginPath();
     ctx.arc(cx, cy, r, aLeft, aRight, false);
     ctx.lineTo(cx, tipY);
@@ -74,19 +90,24 @@
     ctx.fillStyle = color;
     ctx.fill();
 
+    // Turn off shadow for inner elements
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetY = 0;
+
     // Inner white circle
-    const innerR = 16;
+    const innerR = 15.5;
     ctx.beginPath();
     ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
     ctx.fillStyle = '#fff';
     ctx.fill();
 
-    // SVG icon centred in white circle
-    const iconSize = 24;
+    // High-res SVG icon centred in white circle
+    const iconSize = 21;
     ctx.drawImage(iconImg, cx - iconSize / 2, cy - iconSize / 2, iconSize, iconSize);
 
-    const imageData = ctx.getImageData(0, 0, w, h);
-    return { width: w, height: h, data: imageData.data };
+    const imageData = ctx.getImageData(0, 0, w * dpr, h * dpr);
+    return { width: w * dpr, height: h * dpr, data: imageData.data };
   }
 
   function buildGeoJSON() {
@@ -140,12 +161,12 @@
       // Load and colorise all category icons, then register pin images
       const iconImages = {};
       await Promise.all(
-        Object.entries(CATEGORIES).map(async ([cat, { color, icon }]) => {
-          iconImages[cat] = await loadSvgIcon(icon, color);
+        Object.entries(CATEGORIES).map(async ([cat, { icon }]) => {
+          iconImages[cat] = await loadSvgIcon(icon, BRAND_COLOR);
         })
       );
-      for (const [cat, { color }] of Object.entries(CATEGORIES)) {
-        map.addImage(`pin-${cat}`, createPinImage(color, iconImages[cat]));
+      for (const cat of Object.keys(CATEGORIES)) {
+        map.addImage(`pin-${cat}`, createPinImage(BRAND_COLOR, iconImages[cat]), { pixelRatio: 2 });
       }
 
       // GeoJSON source with built-in clustering
@@ -167,7 +188,7 @@
           'circle-color': '#fff',
           'circle-radius': ['step', ['get', 'point_count'], 18, 5, 23, 15, 29],
           'circle-stroke-width': 2.5,
-          'circle-stroke-color': '#8b5e3c',
+          'circle-stroke-color': BRAND_COLOR,
         }
       });
 
@@ -182,7 +203,7 @@
           'text-size': 13,
           'text-font': ['Noto Sans Bold'],
         },
-        paint: { 'text-color': '#8b5e3c' }
+        paint: { 'text-color': BRAND_COLOR }
       });
 
       // ── Individual pins ──

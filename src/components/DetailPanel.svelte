@@ -5,13 +5,13 @@
   export let onselectprovider = () => {};
   export let onbacktogroup = () => {};
 
-  const CATEGORY_COLORS = {
-    'produce': '#2d7a2d',
-    'drinks': '#7b2d56',
-    'orchard': '#c0392b',
-    'honey': '#d9822b',
-    'meat-fish': '#a0522d',
-    'market': '#6a329f',
+  const CATEGORY_ICONS = {
+    'produce': 'produce',
+    'drinks': 'wine',
+    'orchard': 'apple',
+    'honey': 'honey',
+    'meat-fish': 'fish',
+    'market': 'farmers-market',
   };
 
   const CATEGORY_LABELS = {
@@ -42,11 +42,13 @@
     <div class="group-list">
       {#each group.providers as item (item.id)}
         <button class="group-item-card" on:click={() => onselectprovider(item)}>
-          <div class="item-category-bar" style="background: {CATEGORY_COLORS[item.category] || '#666'}"></div>
+          <div class="item-icon-bubble">
+            <span class="card-icon" style="--icon: url('/icons/{CATEGORY_ICONS[item.category] || 'produce'}.svg')"></span>
+          </div>
           <div class="item-content">
             <div class="item-name">{item.name}</div>
             <div class="tags">
-              <span class="tag">{CATEGORY_LABELS[item.category] || item.category}</span>
+              <span class="tag tag--category">{CATEGORY_LABELS[item.category] || item.category}</span>
               {#if item.seasonal}
                 <span class="tag tag--seasonal">Seasonal</span>
               {/if}
@@ -73,7 +75,10 @@
     <div class="detail-header">
       <h2>{provider.name}</h2>
       <div class="tags">
-        <span class="tag">{CATEGORY_LABELS[provider.category] || provider.category.replace('-', ' ')}</span>
+        <span class="tag tag--category">
+          <span class="tag-icon" style="--icon: url('/icons/{CATEGORY_ICONS[provider.category] || 'produce'}.svg')"></span>
+          {CATEGORY_LABELS[provider.category] || provider.category.replace('-', ' ')}
+        </span>
         {#if provider.seasonal}
           <span class="tag tag--seasonal">Seasonal</span>
         {/if}
@@ -166,7 +171,7 @@
   }
 
   .group-count-badge {
-    background: #8b5e3c;
+    background: #dc2d05;
     color: #fff;
     font-size: 11px;
     font-weight: 700;
@@ -225,11 +230,31 @@
     transform: translateY(-1px);
   }
 
-  .item-category-bar {
-    width: 4px;
-    align-self: stretch;
-    border-radius: 4px;
+  .item-icon-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: #fef3f1;
+    border: 1px solid #fad3cb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+  }
+
+  .card-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-color: #dc2d05;
+    -webkit-mask-image: var(--icon);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: var(--icon);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
   }
 
   .item-content {
@@ -283,19 +308,43 @@
   }
 
   .tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 11px;
     font-weight: 600;
     text-transform: capitalize;
-    background: #e8e8e8;
-    color: #333;
+    background: #f0ede6;
+    color: #444;
+  }
+
+  .tag--category {
+    background: #fef3f1;
+    color: #b82404;
+    border: 1px solid #fad3cb;
+  }
+
+  .tag-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: currentColor;
+    -webkit-mask-image: var(--icon);
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-image: var(--icon);
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
   }
 
   .tag--seasonal {
-    background: #fff3cd;
-    color: #7a5800;
+    background: #fff8e6;
+    color: #8a6400;
+    border: 1px solid #f0dfa8;
   }
 
   .description {
