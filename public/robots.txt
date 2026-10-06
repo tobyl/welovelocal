@@ -3,6 +3,7 @@
 
 User-agent: *
 Allow: /
+Disallow: /cdn-cgi/
 
 # Block AI data scrapers, LLM training crawlers, and AI search bots
 
