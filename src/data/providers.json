@@ -1263,5 +1263,16 @@
     "description": "Urban storefront of Brandner Farms in Windsor, offering certified organic produce, grass-fed meats, pastured eggs, and prepared meals.",
     "seasonal": false,
     "website": "https://www.brandnerfarms.ca/"
+  },
+  {
+    "id": 116,
+    "name": "Simard Farms",
+    "category": "produce",
+    "address": "329 County Rd 34 W, Essex, ON",
+    "lat": 42.1118,
+    "lng": -82.7258,
+    "description": "Local grower specializing in artisan and heirloom garlic varieties (Hungarian, Georgian Fire, Red Russian) alongside fresh and pickled garlic scapes.",
+    "seasonal": true,
+    "website": "https://www.facebook.com/simardfarms"
   }
 ]
