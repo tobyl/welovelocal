@@ -33,17 +33,6 @@
     "website": null
   },
   {
-    "id": 4,
-    "name": "Essex Farmers' Market",
-    "category": "market",
-    "address": "60 Talbot Street North, Essex, ON",
-    "lat": 42.1742,
-    "lng": -82.8253,
-    "description": "Seasonal outdoor market in downtown Essex with local produce, meats, and baked goods. Runs late spring through autumn.",
-    "seasonal": true,
-    "website": null
-  },
-  {
     "id": 5,
     "name": "Amherstburg Farmers' Market",
     "category": "market",
@@ -1269,8 +1258,8 @@
     "name": "Simard Farms",
     "category": "produce",
     "address": "329 County Rd 34 W, Essex, ON",
-    "lat": 42.1118,
-    "lng": -82.7258,
+    "lat": 42.1458,
+    "lng": -82.7683,
     "description": "Local grower specializing in artisan and heirloom garlic varieties (Hungarian, Georgian Fire, Red Russian) alongside fresh and pickled garlic scapes.",
     "seasonal": true,
     "website": "https://www.facebook.com/simardfarms"
